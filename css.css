@@ -1,0 +1,96 @@
+img {
+  width: 35em;
+  height: 52em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -27.5em;
+  margin-left: -17.5em;
+}
+
+body{
+  background-color: gray;
+}
+
+.flat-button{
+  width: 15.5em;
+  height: 40px;
+  align-items: center;
+  transition: background-color 0.5s ease;
+  cursor: pointer;
+  margin-top: 20.5%;
+}
+
+#btn-ad:hover{
+  background-color: #e74c3c;
+}
+#btn-noad:hover{
+  background-color: #3498db;
+}
+
+.btn-text{
+  text-align: center;
+  vertical-align: middle;
+  line-height: 0px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  color: white;
+}
+
+#btn-ad{
+  border: #e74c3c 2px solid;
+  margin-left: 43em;
+  float: left;
+}
+
+#btn-noad{
+  border: #3498db 2px solid;
+  margin-right: 43em;
+  float: right;
+}
+
+.round-button{
+  margin-top: 25%;
+  margin-left: 30%;
+  border-radius: 50%;
+  background-color: rgb(100, 100, 100);
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.round-button:hover{
+  background-color: rgb(75, 75, 75);
+}
+
+.round-button-text{
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 50px;
+}
+
+.btn-ad-click{
+  background-color: rgb(231, 76, 60);
+}
+
+.btn-noad-click{
+  background-color: rgb(52, 152, 219);
+}
+
+.loader {
+  margin: auto;
+  margin-top: -5%;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin{
+  0%{transform: rotate(0deg);}
+  100%{transform: rotate(360deg);}
+}
