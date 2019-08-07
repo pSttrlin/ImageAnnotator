@@ -6,10 +6,12 @@
     return array_shift($_SESSION['files']);
   }
 
-  function update_file_list(){
+  function update_file_list($dontInclude = ""){
     $files = array();
     foreach (glob("images/*.jpeg") as $file){
-      $files[] =  $file;
+      if ($file != $dontInclude){
+        $files[] =  $file;
+      }
     }
     $_SESSION["files"] = $files;
   }
@@ -33,34 +35,21 @@
       return;
     }
 
-    $lastImg = array_pop($_SESSION["fp_" . $_GET['fp']]);
-    $file = fopen('filemap.txt', 'r');
-    //Nicht sehr effizient
-    $oldFiles = array();
-    $newFiles = array();
-    while (!feof($file)){
-      $line = fgets($file);
-      if ($line == "") break;
-      list($oldFile, $newFile) = explode(">", $line);
-      $oldFiles[] = $oldFile;
-      $newFiles[] = trim($newFile);
-    }
-    fclose($file);
-    $index = array_search($lastImg, $oldFiles);
-    rename($newFiles[$index], $oldFiles[$index]);
-    echo $oldFiles[$index];
+    $line = array_pop($_SESSION['fp_' . $_GET['fp']]);
+    list($oldFile, $newFile) = explode(">", $line);
 
-    $contents = file_get_contents('filemap.txt');
-    $line = $oldFiles[$index] . ">" . $newFiles[$index];
-    $contents = str_replace($line, '', $contents);
-    file_put_contents('filemap.txt', $contents);
+    rename($newFile, $oldFile);
+    echo $oldFile;
+
+    update_file_list($oldFile);
+
     return;
   }
 
   if (isset($_GET['annot']) && isset($_GET['img'])){
     if (!file_exists($_GET['img'])){
-      echo "rip";
-      return 2;
+      echo "File doesn't exist";
+      return;
     }
     else{
       if (!isset($_GET['fp'])){
@@ -70,27 +59,22 @@
       if (!isset($_SESSION["fp_" . $_GET['fp']])){
         $_SESSION["fp_" . $_GET['fp']] = array();
       }
-      $_SESSION['fp_' . $_GET['fp']][] = $_GET['img'];
 
       if ($_GET['annot']==0){
         $newName = "annotations/Other/" . basename($_GET['img']);
         rename($_GET['img'], $newName);
-        $line = $_GET['img'] . ">" . $newName . "\n";
-        $file = fopen("filemap.txt", 'a');
-        fwrite($file, $line);
-        fclose($file);
+        $line = $_GET['img'] . ">" . $newName;
         echo get_new_img();
-        return;
       }
       else{
         $newName = "annotations/Ads/" . basename($_GET['img']);
         rename($_GET['img'], $newName);
-        $line = $_GET['img'] . ">" . $newName . "\n";
-        $file = fopen("filemap.txt", 'a');
-        fwrite($file, $line);
-        fclose($file);
+        $line = $_GET['img'] . ">" . $newName;
         echo get_new_img();
-        return;
+      }
+      $_SESSION['fp_' . $_GET['fp']][] = $line;
+      if (count($_SESSION['fp_' . $_GET['fp']]) > 5){
+        array_shift($_SESSION['fp_' . $_GET['fp']]);
       }
     }
   }

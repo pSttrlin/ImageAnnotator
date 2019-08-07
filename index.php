@@ -82,6 +82,17 @@
               if (status != 'success'){
                 console.log("ERROR!");
               }
+              if (data == "File doesn't exist"){
+                request = "<?php echo $_SERVER['PHP_SELF']; ?>?getimg=1";
+                $.get(request, function(data, status){
+                  if (status != 'success'){
+                    console.log("ERROR!");
+                  }
+                  img = document.getElementsByTagName('img')[0];
+                  img.setAttribute('src', data);
+                });
+                return;
+              }
               img.setAttribute('src', data);
               img.style.display = "block";
             });
