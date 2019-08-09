@@ -1,15 +1,19 @@
 <?php
   session_start();
-  ignore_user_abort(true);
 
   function get_new_img(){
-    return array_shift($_SESSION['files']);
+    $img = array_shift($_SESSION['files']);
+    while(in_array($img, $_SESSION['inprogress'])){
+      update_file_list();
+      $img = array_shift($_SESSION['files']);
+    }
+    return $img;
   }
 
-  function update_file_list($dontInclude = ""){
+  function update_file_list(){
     $files = array();
     foreach (glob("images/*.jpeg") as $file){
-      if ($file != $dontInclude){
+      if (!in_array($file, $_SESSION['inprogress'])){
         $files[] =  $file;
       }
     }
@@ -18,12 +22,38 @@
 
   if (isset($_GET['close']) &&
       $_GET['close'] == 1 ){
-        if (isset($_GET['fp']) && isset($_SESSION['fp_' . $_GET['fp']])){
-          unset($_SESSION['fp_' . $_GET['fp']]);
+        if (isset($_GET['fp'])){
+          if (isset($_SESSION['fp_' . $_GET['fp']])){
+            unset($_SESSION['fp_' . $_GET['fp']]);
+          }
+          if (isset($_SESSION["inprogress"]['fp_' . $_GET['fp']])){
+            unset($_SESSION['inprogress']["fp_" . $_GET["fp"]]);
+          }
         }
         update_file_list();
       return;
     }
+
+  if (!isset($_SESSION['inprogress'])){
+      $_SESSION['inprogress'] = array();
+    }
+
+
+  if (isset($_GET["getimg"])){
+    if (!isset($_GET['fp'])){
+      echo "Fingerprint needed!";
+      return;
+    }
+
+    $img = get_new_img();
+    if (!isset($_SESSION["inprogress"])){
+      $_SESSION["inprogress"] = array();
+    }
+    $_SESSION['inprogress']["fp_" . $_GET['fp']] = $img;
+    update_file_list();
+    echo $img;
+    return;
+  }
 
   if (isset($_GET['getlast']) && $_GET['getlast'] == 1){
     if (!isset($_GET['fp'])){
@@ -40,8 +70,8 @@
 
     rename($newFile, $oldFile);
     echo $oldFile;
-
-    update_file_list($oldFile);
+    $_SESSION['inprogress']['fp_' . $_GET["fp"]] = $oldFile;
+    update_file_list();
 
     return;
   }
@@ -64,18 +94,20 @@
         $newName = "annotations/Other/" . basename($_GET['img']);
         rename($_GET['img'], $newName);
         $line = $_GET['img'] . ">" . $newName;
-        echo get_new_img();
       }
       else{
         $newName = "annotations/Ads/" . basename($_GET['img']);
         rename($_GET['img'], $newName);
         $line = $_GET['img'] . ">" . $newName;
-        echo get_new_img();
       }
+      $img = get_new_img();
+      $_SESSION["inprogress"]["fp_" . $_GET['fp']] = $img;
       $_SESSION['fp_' . $_GET['fp']][] = $line;
       if (count($_SESSION['fp_' . $_GET['fp']]) > 5){
         array_shift($_SESSION['fp_' . $_GET['fp']]);
       }
+      update_file_list();
+      echo $img;
     }
   }
 ?>

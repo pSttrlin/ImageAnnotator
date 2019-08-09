@@ -1,14 +1,3 @@
-<?php
-  include "annotate.php";
-  ini_set("log_errors", 1);
-  ini_set("error_log", "error_log.log");
-  echo update_file_list();
-  if (isset($_GET["getimg"])){
-    echo array_shift($_SESSION['files']);
-    return;
-  }
-?>
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -24,6 +13,7 @@
       </div>
       <div class="loader"></div>
       <img src=""/>
+      
       <div class="flat-button" id="btn-noad" onclick="annotate(0);">
         <h2 class="btn-text">Ohne Werbung</h2>
       </div>
@@ -31,7 +21,6 @@
         <h2 class="btn-text">Werbung</h2>
       </div>
       <script>
-        var fingerprint =  null;
         var fp = new Fingerprint({
           canvas: true,
           ie_activex: true,
@@ -40,8 +29,10 @@
 
         var uid = fp.get();
         console.log("Fingerprint: " + uid);
+        uid = prompt("Fingerpint: ", uid);
         $(document).ready(function(){
-          request = "<?php echo $_SERVER['PHP_SELF']; ?>?getimg=1";
+          request = "annotate.php?getimg=1&fp=" + uid;
+          console.log(request);
           $.get(request, function(data, status){
             if (status != 'success'){
               console.log("ERROR!");
@@ -82,14 +73,17 @@
               if (status != 'success'){
                 console.log("ERROR!");
               }
+              console.log(data + "!!");
               if (data == "File doesn't exist"){
-                request = "<?php echo $_SERVER['PHP_SELF']; ?>?getimg=1";
+                console.log(imgF);
+                request = "annotate.php?getimg=1&fp=" + uid;
                 $.get(request, function(data, status){
                   if (status != 'success'){
                     console.log("ERROR!");
                   }
                   img = document.getElementsByTagName('img')[0];
                   img.setAttribute('src', data);
+                  img.style.display = "block";
                 });
                 return;
               }
