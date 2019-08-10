@@ -38,7 +38,6 @@
       $_SESSION['inprogress'] = array();
     }
 
-
   if (isset($_GET["getimg"])){
     if (!isset($_GET['fp'])){
       echo "Fingerprint needed!";

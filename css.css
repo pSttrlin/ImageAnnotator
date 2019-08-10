@@ -1,24 +1,30 @@
 img {
-  width: 35em;
-  height: 52em;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -27.5em;
-  margin-left: -17.5em;
+  display: inline-block;
+  margin-left: 10%;
+  margin-right: auto;
+  width: 45%;
+  height: 90%;
+  vertical-align: middle;
+}
+
+html{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body{
-  background-color: gray;
+  background-color: rgb(100, 100, 100);
+  width: 100%;
+  height: 100%;
 }
 
 .flat-button{
-  width: 15.5em;
-  height: 40px;
+  width: 45%;
+  height: 1;
   align-items: center;
   transition: background-color 0.5s ease;
   cursor: pointer;
-  margin-top: 20.5%;
 }
 
 #btn-ad:hover{
@@ -37,23 +43,32 @@ body{
   color: white;
 }
 
+#annot-buttons{
+  display: inline-block;
+  margin-left: calc(20% + 50px);
+  margin-top: 1%;
+  width: 45%;
+  height: 10%;
+}
+
 #btn-ad{
   border: #e74c3c 2px solid;
-  margin-left: 43em;
   float: left;
 }
 
 #btn-noad{
   border: #3498db 2px solid;
-  margin-right: 43em;
   float: right;
 }
 
 .round-button{
+  display: table;
+  float: left;
+  margin-left: 10%;
   margin-top: 25%;
-  margin-left: 30%;
+  vertical-align: middle;
   border-radius: 50%;
-  background-color: rgb(100, 100, 100);
+  background-color: rgb(70, 70, 70);
   width: 50px;
   height: 50px;
   cursor: pointer;
@@ -65,9 +80,11 @@ body{
 }
 
 .round-button-text{
+  display: table-cell;
   color: white;
-  text-align: center;
   vertical-align: middle;
+  text-align: center;
+  margin-bottom: 50%;
   line-height: 50px;
 }
 
@@ -80,11 +97,13 @@ body{
 }
 
 .loader {
-  margin: auto;
-  margin-top: -5%;
+  position: absolute;
+  left: 35%;
+  top: 45%;
   border: 5px solid #f3f3f3;
   border-top: 5px solid #3498db;
   border-radius: 50%;
+  float: right;
   width: 60px;
   height: 60px;
   animation: spin 2s linear infinite;
@@ -93,4 +112,42 @@ body{
 @keyframes spin{
   0%{transform: rotate(0deg);}
   100%{transform: rotate(360deg);}
+}
+
+#panel{
+  background-color: rgb(50, 50, 50);
+  float: right;
+  width: 20%;
+  height: 100%;
+  margin-top: 0px;
+  overflow-y: scroll;
+}
+
+#imgpnl {
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+
+.panel-div{
+  background-color: rgb(100, 100, 100);
+  width: 90%;
+  height: 22em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5%;
+  border-radius: 5%;
+}
+
+.panel-img{
+  display: block;
+  width: 12em;
+  height: 17em;
+  padding-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.panel-h3{
+  text-align: center;
 }
