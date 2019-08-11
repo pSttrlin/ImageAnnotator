@@ -34,6 +34,8 @@
       return;
     }
 
+    update_file_list();
+
   if (!isset($_SESSION['inprogress'])){
       $_SESSION['inprogress'] = array();
     }

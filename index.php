@@ -34,7 +34,7 @@
 
         var uid = fp.get();
         console.log("Fingerprint: " + uid);
-
+        //uid = prompt("Fingerpint: ", uid);
         $(document).ready(function(){
           request = "annotate.php?getimg=1&fp=" + uid;
           document.getElementsByClassName("loader")[0].style.opacity = "1";
