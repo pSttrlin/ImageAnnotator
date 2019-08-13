@@ -45,11 +45,11 @@
       echo "Fingerprint needed!";
       return;
     }
-
-    $img = get_new_img();
     if (!isset($_SESSION["inprogress"])){
       $_SESSION["inprogress"] = array();
     }
+
+    $img = get_new_img();    
     $_SESSION['inprogress']["fp_" . $_GET['fp']] = $img;
     update_file_list();
     echo $img;
