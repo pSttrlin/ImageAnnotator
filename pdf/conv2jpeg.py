@@ -28,12 +28,16 @@ with tempfile.TemporaryDirectory() as path:
         print()
 
     files = glob.glob("*.pdf");
-    for i in trange(len(files), desc="Converting files", miniters=1):
+    pbar = tqdm(range(len(files)), desc="Converting files", miniters=1, leave=True)
+    for i in pbar:
         file = files[i];
+        pbar.set_description("Processing %s" % file)
         images_from_path = convert_from_path(file, output_folder=path,
-                                            last_page=1, first_page=0,
                                             poppler_path=poppler + "/bin")
         save_dir = '../images'
+        nPage = 0
         for page in images_from_path:
-            savename = os.path.join(save_dir, "IMG" + str(i) + ".jpeg")
+            savename = os.path.join(save_dir, "IMG" + str(i) + "_" + str(nPage)+ ".jpeg")
             page.save(savename, "JPEG")
+            nPage += 1
+        #pbar.refresh()

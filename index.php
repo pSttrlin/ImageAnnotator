@@ -24,6 +24,7 @@
         </div>
       </div>
       <div id='panel'>
+
       </div>
       <script>
         var fp = new Fingerprint({
@@ -108,6 +109,8 @@
             path = isAd == 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
             div = document.createElement("div");
             div.className = "panel-div";
+            borderColor = isAd == 1 ? "#e74c3c" :"#3498db";
+            div.style.border = borderColor + " 2px solid";
             img = document.createElement("img");
             h3 = document.createElement("h3");
             h3.innerHTML = isAd == 1 ? "Werbung" : "Ohne Werbung";
