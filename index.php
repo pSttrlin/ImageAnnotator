@@ -50,16 +50,17 @@
           })
         });
         document.body.addEventListener("keydown", function(event) {
-          if (!(event.which == 97 || event.which == 98)){ //97 = NumPad 1, 98 = NumPad 2
+          if (!(event.which == 97 || event.which == 98 ||
+                event.which == 35 || event.which == 40)){ //97 = NumPad 1, 98 = NumPad 2
             return;                                       //     Webung         Ohne
           }
-          anno = event.which == 97 ? 1 : 0;
+          anno = event.which == 97 || event.which == 35 ? 1 : 0;
           btn = document.getElementsByClassName("flat-button")[anno];
           btn.className += " " + btn.id + "-click"
           setTimeout(function() {
             btn.className = btn.className.replace(" " + btn.id + "-click", "");
           }, 500)
-          annotate(event.which == 97 ? 1 : 0);
+          annotate(anno);
         });
 
         $(window).on("beforeunload", function(){
