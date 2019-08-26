@@ -5,6 +5,8 @@ img {
   max-height: 90%;
   vertical-align: middle;
   margin-left: 10%;
+  padding-top: 3%;
+  padding-bottom: 3%;
 }
 
 html{
@@ -27,10 +29,29 @@ body{
   cursor: pointer;
 }
 
+button{
+  width: 100%;
+  height: 15%;
+  background-color: rgb(100, 100, 100);
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  font-size: 2vw;
+  color: white;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
 #btn-ad:hover{
   background-color: #e74c3c;
 }
 #btn-noad:hover{
+  background-color: #3498db;
+}
+
+#btn-ad:focus{
+  background-color: #e74c3c;
+}
+
+#btn-noad:focus{
   background-color: #3498db;
 }
 

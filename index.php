@@ -15,12 +15,8 @@
           <h2 class=round-button-text>&#10094;</h2>
         </div>
         <div id="annot-buttons">
-          <div class="flat-button" id="btn-noad" onclick="annotate(0);">
-            <h2 class="btn-text">Ohne Werbung</h2>
-          </div>
-          <div class="flat-button" id="btn-ad" onclick="annotate(1);">
-            <h2 class="btn-text">Werbung</h2>
-          </div>
+          <button id="btn-noad" onclick="annotate(0)">Ohne Werbung</button>
+            <button id="btn-ad" onclick="annotate(1)">Werbung</button>
         </div>
       </div>
       <div id='panel'>
