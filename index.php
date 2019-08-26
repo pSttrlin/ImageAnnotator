@@ -105,7 +105,6 @@
           }
 
           function createPanelNode(img, isAd){
-            console.log("Yikes");
             basename = img.split(/[\\/]/).pop();
             path = isAd == 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
             div = document.createElement("div");

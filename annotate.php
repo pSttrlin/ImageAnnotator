@@ -44,12 +44,11 @@
     $_SESSION["files"] = $files;
   }
 
-  if (isset($_GET['close']) &&
-      $_GET['close'] == 1 ){
+  if (isset($_GET['close'])){
         if (isset($_GET['fp'])){
-          if (isset($_SESSION['fp_' . $_GET['fp']])){
+          if (isset($_SESSION['fp_' . $_GET['fp']]))
             unset($_SESSION['fp_' . $_GET['fp']]);
-          }
+
           $in_progress = get_in_progress_arr();
           if (isset($in_progress['fp_' . $_GET['fp']])){
             unset($in_progress["fp_" . $_GET["fp"]]);
@@ -60,7 +59,7 @@
       return;
     }
 
-    update_file_list();
+  update_file_list();
 
 
   if (isset($_GET["getimg"])){
@@ -76,12 +75,12 @@
     return;
   }
 
-  if (isset($_GET['getlast']) && $_GET['getlast'] == 1){
+  if (isset($_GET['getlast'])){
     if (!isset($_GET['fp'])){
       echo "Fingerprint needed";
       return;
     }
-    if (!isset($_SESSION["fp_" . $_GET['fp']]) || empty($_SESSION["fp_" . $_GET['fp']])){
+    if (!isset($_SESSION["fp_" . $_GET['fp']]) || empty($_SESSION["fp_" . $_GET['fp']])){ //Noch keine Bilder markiert
       echo "No images recorded";
       return;
     }
@@ -91,6 +90,7 @@
 
     rename($newFile, $oldFile);
     echo $oldFile;
+
     update_in_progress("fp_" . $_GET["fp"]);
     update_file_list();
 
@@ -102,34 +102,34 @@
       echo "File doesn't exist";
       return;
     }
-    else{
-      if (!isset($_GET['fp'])){
-        echo $_GET["img"];
-        return;
-      }
-      if (!isset($_SESSION["fp_" . $_GET['fp']])){
-        $_SESSION["fp_" . $_GET['fp']] = array();
-      }
 
-      if ($_GET['annot']==0){
-        $newName = "annotations/Other/" . basename($_GET['img']);
-        rename($_GET['img'], $newName);
-        $line = $_GET['img'] . ">" . $newName;
-      }
-      else{
-        $newName = "annotations/Ads/" . basename($_GET['img']);
-        rename($_GET['img'], $newName);
-        $line = $_GET['img'] . ">" . $newName;
-      }
-      $img = get_new_img();
-      $_SESSION["inprogress"]["fp_" . $_GET['fp']] = $img;
-      update_in_progress("fp_" . $_GET["fp"], $img);
-      $_SESSION['fp_' . $_GET['fp']][] = $line;
-      if (count($_SESSION['fp_' . $_GET['fp']]) > 5){
-        array_shift($_SESSION['fp_' . $_GET['fp']]);
-      }
-      update_file_list();
-      echo $img;
+    if (!isset($_GET['fp'])){
+      echo $_GET["img"]; //echo fingerprint needed
+      return;
     }
+
+    if (!isset($_SESSION["fp_" . $_GET['fp']])) //Array fürs speichern der 5 letzten bilder
+      $_SESSION["fp_" . $_GET['fp']] = array();
+
+    if ($_GET['annot']==0){ // Ohne Werbung
+      $newName = "annotations/Other/" . basename($_GET['img']);
+      rename($_GET['img'], $newName);
+      $line = $_GET['img'] . ">" . $newName; //Alter + Neuer Bildname speichern um zurück gehen zu können
+    }
+    else{ //Mit Werbung
+      $newName = "annotations/Ads/" . basename($_GET['img']);
+      rename($_GET['img'], $newName);
+      $line = $_GET['img'] . ">" . $newName;
+    }
+
+    $img = get_new_img();
+    update_in_progress("fp_" . $_GET["fp"], $img);
+
+    $_SESSION['fp_' . $_GET['fp']][] = $line;
+    if (count($_SESSION['fp_' . $_GET['fp']]) > 5) //Wenn mehr als 5 Bilder gespeichert sind, das letzte entfernen
+      array_shift($_SESSION['fp_' . $_GET['fp']]);
+
+    update_file_list();
+    echo $img;
   }
 ?>
