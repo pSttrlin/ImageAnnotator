@@ -26,6 +26,11 @@
         return $in_progress["fp_" . $fp];
     }
 
+    update_file_list();
+    if (empty($_SESSION["files"])){
+      return "No files left";
+    }
+
     $img = array_shift($_SESSION['files']);
     while(in_array($img, get_in_progress_arr())){
       update_file_list();
@@ -36,8 +41,9 @@
 
   function update_file_list(){
     $files = array();
+    $in_progress = get_in_progress_arr();
     foreach (glob("images/*.jpeg") as $file){
-      if (!in_array($file, get_in_progress_arr())){
+      if (!in_array($file, $in_progress)){ //Bilder die bearbeitet werden ignorieren
         $files[] =  $file;
       }
     }
@@ -49,7 +55,7 @@
           if (isset($_SESSION['fp_' . $_GET['fp']]))
             unset($_SESSION['fp_' . $_GET['fp']]);
 
-          $in_progress = get_in_progress_arr();
+          $in_progress = get_in_progress_arr(); //Aus der inprogress Array entfernen
           if (isset($in_progress['fp_' . $_GET['fp']])){
             unset($in_progress["fp_" . $_GET["fp"]]);
             set_in_progress($in_progress);
@@ -69,6 +75,12 @@
     }
 
     $img = get_new_img($_GET["fp"]);
+
+    if ($img == "No files left"){
+      echo $img;
+      return;
+    }
+
     update_in_progress("fp_" . $_GET["fp"], $img);
     update_file_list();
     echo $img;
@@ -123,6 +135,12 @@
     }
 
     $img = get_new_img();
+
+    if ($img == "No files left"){
+      echo $img;
+      return;
+    }
+
     update_in_progress("fp_" . $_GET["fp"], $img);
 
     $_SESSION['fp_' . $_GET['fp']][] = $line;

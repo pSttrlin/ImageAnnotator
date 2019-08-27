@@ -26,32 +26,47 @@
         var fp = new Fingerprint({
           canvas: true,
           ie_activex: true,
-          screen_resolution: true
+          screen_resolution: true,
+          user_agent: false
         });
 
         var uid = fp.get();
         console.log("Fingerprint: " + uid);
         //uid = prompt("Fingerpint: ", uid);
+
+
+        $(window).on("beforeunload", function(){
+            let request = "annotate.php?close=1&fp=" + uid;
+            $.get(request, function(data, status){});
+        });
+
         $(document).ready(function(){
-          request = "annotate.php?getimg=1&fp=" + uid;
-          document.getElementsByClassName("loader")[0].style.opacity = "1";
-          console.log(request);
+          let request = "annotate.php?getimg=1&fp=" + uid; //GET anfrage
+          document.getElementsByClassName("loader")[0].style.opacity = "1"; //Ladebalken anzeigen
           $.get(request, function(data, status){
             if (status != 'success'){
               console.log("ERROR!");
             }
-            img = document.getElementsByTagName('img')[0];
+
+            if (data == "No files left"){
+                alert("Keine Bilder übrig");
+            }
+            //Bild laden und anzeigen
+            let img = document.getElementsByTagName('img')[0];
             img.setAttribute('src', data);
             document.getElementsByClassName("loader")[0].style.opacity = "0";
           })
         });
+
+        //Hotkeys
         document.body.addEventListener("keydown", function(event) {
-          if (!(event.which == 97 || event.which == 98 ||
-                event.which == 35 || event.which == 40)){ //97 = NumPad 1, 98 = NumPad 2
+          if (!(event.which == 97 || event.which == 98 || //97 = NumPad 1, 98 = NumPad 2
+                event.which == 35 || event.which == 40)){ //35 = Ende,     40 = Down Arrow
             return;                                       //     Webung         Ohne
           }
-          anno = event.which == 97 || event.which == 35 ? 1 : 0;
-          btn = document.getElementsByClassName("flat-button")[anno];
+
+          let anno = event.which == 97 || event.which == 35 ? 1 : 0; //NumPad 1 = Mit Werbung ( 1 ), NumPad 2 = Ohne Werbung ( 0 )
+          let btn = document.getElementsByTagName("button")[anno]; //Das erste Element ist der Button "Ohne Werbung", das zweite Element der Button "Werbung"
           btn.className += " " + btn.id + "-click"
           setTimeout(function() {
             btn.className = btn.className.replace(" " + btn.id + "-click", "");
@@ -59,33 +74,40 @@
           annotate(anno);
         });
 
-        $(window).on("beforeunload", function(){
-          request = "annotate.php?close=1&fp=" + uid;
-          $.get(request, function(data, status){
-            console.log(data);
-          });
-        });
-
         function annotate(isAd){
             if(!(isAd == 0 || isAd == 1)){
               return;
             }
-            img = document.getElementsByTagName("img")[0];
-            imgF = img.getAttribute("src");
-            request = encodeURI("annotate.php?annot=" + isAd + "&img=" + imgF + "&fp=" + uid);
+            let img = document.getElementsByTagName("img")[0];
+            let imgF = img.getAttribute("src");
+            let request = encodeURI("annotate.php?annot=" + isAd + "&img=" + imgF + "&fp=" + uid);
+
             img.style.opacity = "0";
             document.getElementsByClassName("loader")[0].style.opacity = "1";
+
             $.get(request, function(data, status){
+
               if (status != 'success'){
                 console.log("ERROR!");
               }
+
+              if (data == "No files left"){
+                 alert("Keine Bilder übrig");
+                 return;
+              }
+
               if (data == "File doesn't exist"){
-                console.log(imgF);
                 request = "annotate.php?getimg=1&fp=" + uid;
                 $.get(request, function(data, status){
                   if (status != 'success'){
                     console.log("ERROR!");
                   }
+
+                  if (data == "No files left"){
+                      alert("Keine Bilder übrig");
+                      return;
+                  }
+                  //Neues Bild laden und anzeigen
                   img = document.getElementsByTagName('img')[0];
                   img.setAttribute('src', data);
                   img.style.opacity = "1";
@@ -93,6 +115,8 @@
                 });
                 return;
               }
+
+              //Neues Bild laden und anzeigen
               img.setAttribute('src', data);
               img.style.opacity = "1";
               document.getElementsByClassName("loader")[0].style.opacity = "0";
@@ -101,32 +125,33 @@
           }
 
           function createPanelNode(img, isAd){
-            basename = img.split(/[\\/]/).pop();
-            path = isAd == 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
-            div = document.createElement("div");
+            let basename = img.split(/[\\/]/).pop(); //Bildname ohne Pfad
+            let path = isAd == 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
+
+            let div = document.createElement("div");
             div.className = "panel-div";
-            borderColor = isAd == 1 ? "#e74c3c" :"#3498db";
+            let borderColor = isAd == 1 ? "#e74c3c" :"#3498db";
             div.style.border = borderColor + " 2px solid";
             img = document.createElement("img");
-            h3 = document.createElement("h3");
+            let h3 = document.createElement("h3");
             h3.innerHTML = isAd == 1 ? "Werbung" : "Ohne Werbung";
             h3.className = "panel-h3";
             img.className = "panel-img";
             img.setAttribute("src", path);
             div.appendChild(img);
             div.appendChild(h3);
-            paneldiv = document.getElementById("panel");
-            if (paneldiv.childNodes.length > 0){
+
+            let paneldiv = document.getElementById("panel");
+            //Div an erster Stelle anfügen
+            if (paneldiv.childNodes.length > 0)
               paneldiv.insertBefore(div, paneldiv.childNodes[0]);
-            }
-            else{
+            else
               paneldiv.appendChild(div);
-            }
           }
 
           function goback(){
-            request = "annotate.php?getlast=1&fp=" + uid;
-            img = document.getElementsByTagName('img')[0];
+            let request = "annotate.php?getlast=1&fp=" + uid;
+            let img = document.getElementsByTagName('img')[0];
             img.style.opacity = "0";
             document.getElementsByClassName("loader")[0].style.opacity = "1";
             $.get(request, function(data, status){
@@ -135,7 +160,8 @@
               }
               if (data != "No images recorded"){
               img.setAttribute('src', data);
-              div = document.getElementById("panel");
+              //Erstes div entfernen
+              let div = document.getElementById("panel");
               div.removeChild(div.firstChild);
             }
             img.style.opacity = "1";

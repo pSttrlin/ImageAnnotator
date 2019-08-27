@@ -1,14 +1,3 @@
-img {
-  display: inline-block;
-  margin-right: auto;
-  max-width: 45%;
-  max-height: 90%;
-  vertical-align: middle;
-  margin-left: 10%;
-  padding-top: 3%;
-  padding-bottom: 3%;
-}
-
 html{
   width: 100%;
   height: 100%;
@@ -21,12 +10,22 @@ body{
   height: 100%;
 }
 
-.flat-button{
-  width: 100%;
-  height: 1;
+#imgpnl {
+  float: left;
+  width: 80%;
+  height: 100%;
   align-items: center;
-  transition: background-color 0.5s ease;
-  cursor: pointer;
+}
+
+img {
+  display: inline-block;
+  margin-right: auto;
+  max-width: 45%;
+  max-height: 90%;
+  vertical-align: middle;
+  margin-left: 10%;
+  padding-top: 3%;
+  padding-bottom: 3%;
 }
 
 button{
@@ -35,33 +34,9 @@ button{
   background-color: rgb(100, 100, 100);
   cursor: pointer;
   transition: background-color 0.5s ease;
-  font-size: 2vw;
+  font-size: 1vw;
   color: white;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-
-#btn-ad:hover{
-  background-color: #e74c3c;
-}
-#btn-noad:hover{
-  background-color: #3498db;
-}
-
-#btn-ad:focus{
-  background-color: #e74c3c;
-}
-
-#btn-noad:focus{
-  background-color: #3498db;
-}
-
-.btn-text{
-  text-align: center;
-  vertical-align: middle;
-  line-height: 0px;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: 300;
-  color: white;
 }
 
 #annot-buttons{
@@ -83,12 +58,34 @@ button{
   float: top;
 }
 
+.btn-ad-click{
+  background-color: rgb(231, 76, 60);
+}
+
+.btn-noad-click{
+  background-color: rgb(52, 152, 219);
+}
+
+#btn-ad:hover{
+  background-color: #e74c3c;
+}
+#btn-noad:hover{
+  background-color: #3498db;
+}
+
+#btn-ad:focus{
+  background-color: #e74c3c;
+}
+
+#btn-noad:focus{
+  background-color: #3498db;
+}
+
 .round-button{
   display: table;
   float: left;
   margin-left: 10%;
   margin-top: 25%;
-  vertical-align: middle;
   border-radius: 50%;
   background-color: rgb(70, 70, 70);
   width: 50px;
@@ -104,18 +101,8 @@ button{
 .round-button-text{
   display: table-cell;
   color: white;
-  vertical-align: middle;
   text-align: center;
-  margin-bottom: 50%;
   line-height: 50px;
-}
-
-.btn-ad-click{
-  background-color: rgb(231, 76, 60);
-}
-
-.btn-noad-click{
-  background-color: rgb(52, 152, 219);
 }
 
 .loader {
@@ -140,21 +127,17 @@ button{
   background-color: rgb(50, 50, 50);
   float: right;
   width: 20%;
+  max-width: 400px;
   height: 100%;
   margin-top: 0px;
   overflow-y: scroll;
 }
 
-#imgpnl {
-  float: left;
-  width: 80%;
-  height: 100%;
-  align-items: center;
-}
-
 .panel-div{
   background-color: rgb(100, 100, 100);
   width: 90%;
+  max-width: 330px;
+  max-height: 350px;
   height: 22em;
   margin-left: auto;
   margin-right: auto;
@@ -164,8 +147,8 @@ button{
 
 .panel-img{
   display: block;
-  width: 12em;
-  height: 17em;
+  max-width: 12em;
+  max-height: 17em;
   padding-top: 1em;
   margin-left: auto;
   margin-right: auto;
