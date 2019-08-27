@@ -8,6 +8,7 @@ body{
   background-color: rgb(100, 100, 100);
   width: 100%;
   height: 100%;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #imgpnl {
@@ -36,7 +37,6 @@ button{
   transition: background-color 0.5s ease;
   font-size: 1vw;
   color: white;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #annot-buttons{

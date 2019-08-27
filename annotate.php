@@ -27,7 +27,7 @@
     }
 
     update_file_list();
-    if (empty($_SESSION["files"])){
+    if (empty($_SESSION["files"])){ //Keine Bilder mehr in images/
       return "No files left";
     }
 
@@ -103,7 +103,7 @@
     rename($newFile, $oldFile);
     echo $oldFile;
 
-    update_in_progress("fp_" . $_GET["fp"]);
+    update_in_progress("fp_" . $_GET["fp"], $oldFile);
     update_file_list();
 
     return;

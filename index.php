@@ -16,21 +16,19 @@
         </div>
         <div id="annot-buttons">
           <button id="btn-noad" onclick="annotate(0)">Ohne Werbung</button>
-            <button id="btn-ad" onclick="annotate(1)">Werbung</button>
+          <button id="btn-ad" onclick="annotate(1)">Werbung</button>
         </div>
       </div>
-      <div id='panel'>
-
-      </div>
+      <div id='panel'></div>
       <script>
-        var fp = new Fingerprint({
+        let fp = new Fingerprint({
           canvas: true,
           ie_activex: true,
           screen_resolution: true,
           user_agent: false
         });
 
-        var uid = fp.get();
+        let uid = fp.get();
         console.log("Fingerprint: " + uid);
         //uid = prompt("Fingerpint: ", uid);
 
@@ -60,14 +58,14 @@
 
         //Hotkeys
         document.body.addEventListener("keydown", function(event) {
-          if (!(event.which == 97 || event.which == 98 || //97 = NumPad 1, 98 = NumPad 2
-                event.which == 35 || event.which == 40)){ //35 = Ende,     40 = Down Arrow
-            return;                                       //     Webung         Ohne
+          if (!(event.which === 97 || event.which === 98 || //97 = NumPad 1, 98 = NumPad 2
+                event.which === 35 || event.which === 40)){ //35 = Ende,     40 = Down Arrow
+            return;                                         //     Webung         Ohne Werbung
           }
 
-          let anno = event.which == 97 || event.which == 35 ? 1 : 0; //NumPad 1 = Mit Werbung ( 1 ), NumPad 2 = Ohne Werbung ( 0 )
+          let anno = event.which === 97 || event.which === 35 ? 1 : 0; //NumPad 1 = Mit Werbung ( 1 ), NumPad 2 = Ohne Werbung ( 0 )
           let btn = document.getElementsByTagName("button")[anno]; //Das erste Element ist der Button "Ohne Werbung", das zweite Element der Button "Werbung"
-          btn.className += " " + btn.id + "-click"
+          btn.className += " " + btn.id + "-click";
           setTimeout(function() {
             btn.className = btn.className.replace(" " + btn.id + "-click", "");
           }, 500)
@@ -75,9 +73,11 @@
         });
 
         function annotate(isAd){
+
             if(!(isAd == 0 || isAd == 1)){
               return;
             }
+
             let img = document.getElementsByTagName("img")[0];
             let imgF = img.getAttribute("src");
             let request = encodeURI("annotate.php?annot=" + isAd + "&img=" + imgF + "&fp=" + uid);
@@ -126,15 +126,15 @@
 
           function createPanelNode(img, isAd){
             let basename = img.split(/[\\/]/).pop(); //Bildname ohne Pfad
-            let path = isAd == 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
+            let path = isAd === 1 ? "annotations/Ads/" + basename : "annotations/Other/" + basename;
 
             let div = document.createElement("div");
             div.className = "panel-div";
-            let borderColor = isAd == 1 ? "#e74c3c" :"#3498db";
+            let borderColor = isAd === 1 ? "#e74c3c" :"#3498db";
             div.style.border = borderColor + " 2px solid";
             img = document.createElement("img");
             let h3 = document.createElement("h3");
-            h3.innerHTML = isAd == 1 ? "Werbung" : "Ohne Werbung";
+            h3.innerHTML = isAd === 1 ? "Werbung" : "Ohne Werbung";
             h3.className = "panel-h3";
             img.className = "panel-img";
             img.setAttribute("src", path);
