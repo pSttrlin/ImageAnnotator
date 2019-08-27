@@ -89,6 +89,7 @@
 
               if (status != 'success'){
                 console.log("ERROR!");
+                return;
               }
 
               if (data == "No files left"){
@@ -140,6 +141,10 @@
             img.setAttribute("src", path);
             div.appendChild(img);
             div.appendChild(h3);
+            div.addEventListener("click", function () {
+                goto(div);
+            });
+
 
             let paneldiv = document.getElementById("panel");
             //Div an erster Stelle anfügen
@@ -147,6 +152,39 @@
               paneldiv.insertBefore(div, paneldiv.childNodes[0]);
             else
               paneldiv.appendChild(div);
+          }
+
+          function goto(div){
+            let panel = document.getElementById("panel");
+
+            let imagePath = div.getElementsByTagName("img")[0].getAttribute("src");
+            let isAd = imagePath.includes("Ads") ? 1 : 0;
+            let request = "annotate.php?goto=" + imagePath + "&ad=" + isAd + "&fp=" + uid;
+
+            let img = document.getElementsByTagName("img")[0];
+            img.style.opacity = "0";
+            document.getElementsByClassName("loader")[0].style.opacity = "1";
+
+            $.get(request, function(data, status) {
+
+               if(status != "success"){
+                  console.log("ERROR!");
+                  return;
+               }
+
+               if (data == "File not found"){
+                   alert("Bild nicht gefunden"); //Neues Bild laden?
+                   img.style.opacity = "1";
+                   document.getElementsByClassName("loader")[0].style.opacity = "1";
+                   return;
+               }
+
+               img.setAttribute("src", data);
+               img.style.opacity = "1";
+               document.getElementsByClassName("loader")[0].style.opacity = "0";
+            });
+
+            panel.removeChild(div);
           }
 
           function goback(){
@@ -157,9 +195,11 @@
             $.get(request, function(data, status){
               if (status != 'success'){
                 console.log("ERROR");
+                return;
               }
               if (data != "No images recorded"){
               img.setAttribute('src', data);
+
               //Erstes div entfernen
               let div = document.getElementById("panel");
               div.removeChild(div.firstChild);

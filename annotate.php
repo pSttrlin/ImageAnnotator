@@ -2,7 +2,7 @@
   session_start();
 
   if(!file_exists("inprogress.arr"))
-    file_put_contents(serialize(array()));
+    file_put_contents("inprogress.arr", serialize(array()));
 
   function get_in_progress_arr(){
     return unserialize(file_get_contents("inprogress.arr"));
@@ -67,6 +67,32 @@
 
   update_file_list();
 
+  if (isset($_GET["goto"])){
+    $imgPath = $_GET["goto"];
+    $isAd = $_GET["ad"];
+    $fp = $_GET["fp"];
+    if (!file_exists($imgPath)){
+      echo "File not found";
+      return;
+    }
+
+    $basename = basename($imgPath);
+    file_put_contents("test.txt", $basename);
+    $newname = "images/" . $basename;
+    rename($imgPath, $newname);
+
+    update_in_progress("fp_" . $fp, $newname);
+
+    foreach ($_SESSION["fp_" . $fp] as $line){
+      if (strpos($line, $basename) !== false){
+        $key = array_search($line, $_SESSION["fp_" . $fp]);
+        unset($_SESSION["fp_" . $fp][$key]);
+      }
+    }
+
+    echo $newname;
+    return;
+  }
 
   if (isset($_GET["getimg"])){
     if (!isset($_GET['fp'])){
