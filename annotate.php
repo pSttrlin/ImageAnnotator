@@ -109,6 +109,7 @@
 
     update_in_progress("fp_" . $_GET["fp"], $img);
     update_file_list();
+
     echo $img;
     return;
   }

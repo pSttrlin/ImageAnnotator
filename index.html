@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Annotation</title>
+    <meta charset="utf-8" />
+    <link type='text/css' rel='stylesheet' href="css.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/fingerprint2.js" type="application/javascript"></script>
+    <script src="/main.js" type="application/javascript"></script>
+    </head>
+    <body>
+      <div id="imgpnl">
+        <img src=""/>
+        <div class="loader"></div>
+        <div class=round-button onclick="goback();">
+          <h2 class=round-button-text>&#10094;</h2>
+        </div>
+        <div id="annot-buttons">
+          <button id="btn-noad" onclick="annotate(0)">Ohne Werbung</button>
+          <button id="btn-ad" onclick="annotate(1)">Werbung</button>
+        </div>
+      </div>
+      <div id='panel'></div>
+    </body>
+</html>
