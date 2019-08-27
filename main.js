@@ -60,7 +60,7 @@ function get_image(){
 }
 
 function make_annotation_request(isAd, image){
-    let request = encodeURI("annotate.php?annot=" + isAd + "&img=" + image + "&fp=" + uid);
+    let request = encodeURI("annotate.php?annot=1&ad=" + isAd + "&img=" + image + "&fp=" + uid);
     let resp;
 
     $.ajax({
@@ -75,7 +75,7 @@ function make_annotation_request(isAd, image){
         return null;
     }
 
-    if (resp == "File doens't exists"){
+    if (resp == "File not found"){
         resp = get_image(0);
         return resp;
     }
