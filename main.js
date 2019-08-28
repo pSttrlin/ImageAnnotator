@@ -8,7 +8,7 @@ let fp = new Fingerprint({
 let uid = fp.get();
 console.log("Fingerprint: " + uid);
 //uid = prompt("Fingerpint: ", uid);
-
+let canAnnotate;
 
 $(window).on("beforeunload", function(){
     let request = "annotate.php?close=1&fp=" + uid;
@@ -16,28 +16,32 @@ $(window).on("beforeunload", function(){
 });
 
 $(window).ready(function () {
+
+    document.getElementsByTagName("img")[0].addEventListener("load", on_image_load);
+
     //Hotkeys
     document.body.addEventListener("keydown", function(event) {
-        if (!(event.which === 97 || event.which === 98 || //97 = NumPad 1, 98 = NumPad 2
-            event.which === 35 || event.which === 40)){ //35 = Ende,     40 = Down Arrow
-            return;                                         //     Webung         Ohne Werbung
-        }
+        if (!(event.which === 65 || event.which === 68))  //65 = A,        68 = B
+            return;                                       //Ohne Werbung   Werbung
 
-        let anno = event.which === 97 || event.which === 35 ? 1 : 0; //NumPad 1 = Mit Werbung ( 1 ), NumPad 2 = Ohne Werbung ( 0 )
+        if (!canAnnotate) return;
+
+        let anno = event.which === 68 ? 1 : 0; //A = Mit Werbung ( 1 ), B = Ohne Werbung ( 0 )
         let btn = document.getElementsByTagName("button")[anno]; //Das erste Element ist der Button "Ohne Werbung", das zweite Element der Button "Werbung"
         btn.className += " " + btn.id + "-click";
         setTimeout(function() {
             btn.className = btn.className.replace(" " + btn.id + "-click", "");
-        }, 500)
+        }, 500);
         annotate(anno);
     });
 
     document.getElementsByClassName("loader")[0].style.opacity = "1"; //Ladebalken anzeigen
-    let display = document.getElementsByTagName("img")[0];
+    //let display = document.getElementsByTagName("img")[0];
 
     let img = get_image();
 
-    display.setAttribute("src", img);
+    //display.setAttribute("src", img);
+    set_image(img);
     document.getElementsByClassName("loader")[0].style.opacity = "0";
 });
 
@@ -76,7 +80,7 @@ function make_annotation_request(isAd, image){
     }
 
     if (resp == "File not found"){
-        resp = get_image(0);
+        resp = get_image();
         return resp;
     }
 
@@ -85,7 +89,9 @@ function make_annotation_request(isAd, image){
 
 function annotate(isAd){
 
-    if(!(isAd == 0 || isAd == 1)){
+    if (!canAnnotate) return;
+
+    if(!(isAd === 0 || isAd === 1)){
         return;
     }
 
@@ -97,7 +103,8 @@ function annotate(isAd){
 
     let newImage = make_annotation_request(isAd, imgF);
 
-    img.setAttribute("src", newImage);
+    //img.setAttribute("src", newImage);
+    set_image(newImage);
     img.style.opacity = "1";
     document.getElementsByClassName("loader")[0].style.opacity = "0";
 
@@ -137,7 +144,6 @@ function goto(div){
     let panel = document.getElementById("panel");
 
     let imagePath = div.getElementsByTagName("img")[0].getAttribute("src");
-    let isAd = imagePath.includes("Ads") ? 1 : 0;
     let request = "annotate.php?goto=1&img=" + imagePath + "&fp=" + uid;
 
     let img = document.getElementsByTagName("img")[0];
@@ -158,7 +164,8 @@ function goto(div){
             return;
         }
 
-        img.setAttribute("src", data);
+        //img.setAttribute("src", data);
+        set_image(data);
         img.style.opacity = "1";
         document.getElementsByClassName("loader")[0].style.opacity = "0";
     });
@@ -177,7 +184,8 @@ function goback(){
             return;
         }
         if (data != "No images recorded"){
-            img.setAttribute('src', data);
+            //img.setAttribute('src', data);
+            set_image(data);
 
             //Erstes div entfernen
             let div = document.getElementById("panel");
@@ -186,4 +194,26 @@ function goback(){
         img.style.opacity = "1";
         document.getElementsByClassName("loader")[0].style.opacity = "0";
     });
+}
+
+function on_image_load(){
+    enable_annot();
+}
+
+function set_image(image){
+    disable_annot();
+    let img = document.getElementsByTagName("img")[0];
+    img.setAttribute("src", image);
+}
+
+function disable_annot(){
+    for (let btn in document.getElementsByTagName("button"))
+        btn.enabled = false;
+    canAnnotate = false;
+}
+
+function enable_annot(){
+    for (let btn in document.getElementsByTagName("button"))
+        btn.enabled = true;
+    canAnnotate = true;
 }
