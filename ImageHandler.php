@@ -47,7 +47,7 @@ class ImageHandler
         if (!file_exists($img))
             return "File not found";
 
-        $newName = ($ad == 1 ? "annotations/Ads/" : "annotations/Other/") . basename($img);
+        $newName = ($ad ? "annotations/Ads/" : "annotations/Other/") . basename($img);
 
         rename($img, $newName);
 

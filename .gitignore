@@ -1,6 +1,7 @@
 annotations/
 inprogress.arr
-images/
+images/*.jpeg
+images/duplicates/
 .idea/
 *.pdf
 pdf/poppler-0.67.0/

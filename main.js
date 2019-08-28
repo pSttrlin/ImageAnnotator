@@ -9,6 +9,7 @@ let uid = fp.get();
 console.log("Fingerprint: " + uid);
 //uid = prompt("Fingerpint: ", uid);
 let canAnnotate;
+let annotated = 0;
 
 $(window).on("beforeunload", function(){
     let request = "annotate.php?close=1&fp=" + uid;
@@ -109,6 +110,7 @@ function annotate(isAd){
     document.getElementsByClassName("loader")[0].style.opacity = "0";
 
     createPanelNode(imgF, isAd);
+    increase_and_update_annotated();
 }
 
 function createPanelNode(img, isAd){
@@ -168,6 +170,7 @@ function goto(div){
         set_image(data);
         img.style.opacity = "1";
         document.getElementsByClassName("loader")[0].style.opacity = "0";
+        decrease_and_update_annotated();
     });
 
     panel.removeChild(div);
@@ -193,7 +196,18 @@ function goback(){
         }
         img.style.opacity = "1";
         document.getElementsByClassName("loader")[0].style.opacity = "0";
+        decrease_and_update_annotated();
     });
+}
+
+function increase_and_update_annotated(){
+    annotated++;
+    document.getElementById("numAnno").innerHTML = annotated;
+}
+
+function decrease_and_update_annotated(){
+    annotated--;
+    document.getElementById("numAnno").innerHTML = annotated;
 }
 
 function on_image_load(){

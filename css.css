@@ -123,6 +123,13 @@ button{
   100%{transform: rotate(360deg);}
 }
 
+#pNumAnno{
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  right: 15%;
+}
+
 #panel{
   background-color: rgb(50, 50, 50);
   float: right;

@@ -1,7 +1,7 @@
 <?php
   include "ArgumentParser.php";
   include "ImageHandler.php";
-  //TODO > Parser error falls nicht alles notwendingen Argumente vorhanden
+
   session_start();
 
   $callDict = array("getimg"  => "get_new_image",
