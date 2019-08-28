@@ -19,8 +19,9 @@ class ImageHandler
         if (isset($_SESSION["history"]))
             $this->history = &$_SESSION["history"];
         else $this->history = new History();
-        if (!file_exists("inprogress.arr"))
+        if (!file_exists("inprogress.arr")) {
             $this->set_in_progress_arr(array());
+        }
         $this->update_file_list();
     }
 
@@ -49,7 +50,7 @@ class ImageHandler
         $newName = ($ad == 1 ? "annotations/Ads/" : "annotations/Other/") . basename($img);
 
         rename($img, $newName);
-        //history
+
         $this->history->add_to_history($img, $newName);
 
         $img = $this->get_new_image();
@@ -57,13 +58,14 @@ class ImageHandler
         return $img;
     }
 
-    function goto_image($img, $ad, $fp){
+    function goto_image($img, $fp){
         if (!file_exists($img)) return "File not found";
 
         $this->history->remove_from_history($img);
 
         $newName = "images/" . basename($img);
         rename($img, $newName);
+
         $this->update_in_progress_arr("fp_" . $fp, $newName);
         $this->update_file_list();
         return $newName;
@@ -75,7 +77,7 @@ class ImageHandler
             unset($in_progress["fp_" . $fp]);
             $this->set_in_progress_arr($in_progress);
         }
-        $this->update_file_list();
+        session_reset();
     }
 
     function get_last_image($fp){
@@ -101,7 +103,7 @@ class ImageHandler
     }
 
     function set_in_progress_arr($arr){
-        file_put_contents("inprogress.arr", $arr);
+        file_put_contents("inprogress.arr", serialize($arr));
     }
 
     function update_in_progress_arr($element, $value){

@@ -26,10 +26,10 @@ class History
 
     public function remove_from_history($file){
         $basename = basename($file);
-        for ($i = 0; $i < count($this->history); $i++){
-            if (strpos($this->history[$i], $basename))
-            {
-                unset($this->history[$i]);
+        foreach ($this->history as $file){
+            if (strpos($file, $basename)){
+                $key = array_search($file, $this->history);
+                unset($this->history[$key]);
                 break;
             }
         }

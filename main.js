@@ -138,7 +138,7 @@ function goto(div){
 
     let imagePath = div.getElementsByTagName("img")[0].getAttribute("src");
     let isAd = imagePath.includes("Ads") ? 1 : 0;
-    let request = "annotate.php?goto=" + imagePath + "&ad=" + isAd + "&fp=" + uid;
+    let request = "annotate.php?goto=1&img=" + imagePath + "&fp=" + uid;
 
     let img = document.getElementsByTagName("img")[0];
     img.style.opacity = "0";

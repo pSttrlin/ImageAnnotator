@@ -3,7 +3,6 @@
   include "ImageHandler.php";
   //TODO > Parser error falls nicht alles notwendingen Argumente vorhanden
   session_start();
-  session_reset();
 
   $callDict = array("getimg"  => "get_new_image",
                     "getlast" => "get_last_image",
@@ -32,7 +31,7 @@
 
   function goto_image(){
     global $parser, $image_handler;
-    echo $image_handler->goto_image($parser->img, $parser->ad, $parser->fp);
+    echo $image_handler->goto_image($parser->img, $parser->fp);
   }
 
   function annotate_image(){
