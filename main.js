@@ -36,56 +36,31 @@ $(window).ready(function () {
         annotate(anno);
     });
 
-    document.getElementsByClassName("loader")[0].style.opacity = "1"; //Ladebalken anzeigen
+    show_loader_hide_image();
     //let display = document.getElementsByTagName("img")[0];
-
-    let img = get_image();
-
-    //display.setAttribute("src", img);
-    set_image(img);
-    document.getElementsByClassName("loader")[0].style.opacity = "0";
+    get_image();
 });
 
 function get_image(){
     let request = "annotate.php?getimg=1&fp=" + uid;
-    let resp;
+
     $.ajax({
         type: "GET",
         url: request,
-        async: false,
-        success: function (response) { resp = response; }
+        async: true,
+        success: function (response) { set_image(response); }
     });
-
-    if (resp == "No files left"){
-        alert("No files left");
-        return null;
-    }
-
-    return resp;
 }
 
 function make_annotation_request(isAd, image){
     let request = encodeURI("annotate.php?annot=1&ad=" + isAd + "&img=" + image + "&fp=" + uid);
-    let resp;
 
     $.ajax({
         type: "GET",
         url: request,
-        async: false,
-        success: function (response) { resp = response; }
+        async: true,
+        success: function (response) { set_image(response); createPanelNode(image, isAd); }
     });
-
-    if (resp == "No files left"){
-        alert("Keine Bild übrig");
-        return null;
-    }
-
-    if (resp == "File not found"){
-        resp = get_image();
-        return resp;
-    }
-
-    return resp;
 }
 
 function annotate(isAd){
@@ -95,21 +70,13 @@ function annotate(isAd){
     if(!(isAd === 0 || isAd === 1)){
         return;
     }
+    show_loader_hide_image();
 
     let img = document.getElementsByTagName("img")[0];
     let imgF = img.getAttribute("src");
 
-    img.style.opacity = "0";
-    document.getElementsByClassName("loader")[0].style.opacity = "1";
-
-    let newImage = make_annotation_request(isAd, imgF);
-
-    //img.setAttribute("src", newImage);
-    set_image(newImage);
-    img.style.opacity = "1";
-    document.getElementsByClassName("loader")[0].style.opacity = "0";
-
-    createPanelNode(imgF, isAd);
+    make_annotation_request(isAd, imgF);
+    
     increase_and_update_annotated();
 }
 
@@ -149,8 +116,7 @@ function goto(div){
     let request = "annotate.php?goto=1&img=" + imagePath + "&fp=" + uid;
 
     let img = document.getElementsByTagName("img")[0];
-    img.style.opacity = "0";
-    document.getElementsByClassName("loader")[0].style.opacity = "1";
+    show_loader_hide_image();
 
     $.get(request, function(data, status) {
 
@@ -168,8 +134,6 @@ function goto(div){
 
         //img.setAttribute("src", data);
         set_image(data);
-        img.style.opacity = "1";
-        document.getElementsByClassName("loader")[0].style.opacity = "0";
         decrease_and_update_annotated();
     });
 
@@ -178,9 +142,7 @@ function goto(div){
 
 function goback(){
     let request = "annotate.php?getlast=1&fp=" + uid;
-    let img = document.getElementsByTagName('img')[0];
-    img.style.opacity = "0";
-    document.getElementsByClassName("loader")[0].style.opacity = "1";
+    show_loader_hide_image();
     $.get(request, function(data, status){
         if (status != 'success'){
             console.log("ERROR");
@@ -194,10 +156,18 @@ function goback(){
             let div = document.getElementById("panel");
             div.removeChild(div.firstChild);
         }
-        img.style.opacity = "1";
-        document.getElementsByClassName("loader")[0].style.opacity = "0";
         decrease_and_update_annotated();
     });
+}
+
+function hide_loader_show_image(){
+    document.getElementsByTagName("img")[0].style.opacity = "1";
+    document.getElementsByClassName("loader")[0].style.opacity = "0";
+}
+
+function show_loader_hide_image(){
+    document.getElementsByClassName("loader")[0].style.opacity = "1";
+    document.getElementsByTagName("img")[0].style.opacity = "0";
 }
 
 function increase_and_update_annotated(){
@@ -211,13 +181,37 @@ function decrease_and_update_annotated(){
 }
 
 function on_image_load(){
+    hide_loader_show_image();
     enable_annot();
 }
 
 function set_image(image){
+
+    if (!check_image(image)) return;
+
     disable_annot();
     let img = document.getElementsByTagName("img")[0];
     img.setAttribute("src", image);
+}
+
+function check_image(image){
+    if (image == "No files left"){
+        alert ("Alle Bilder zugeordnet");
+        return false;
+    }
+    else if (image == "File not found"){
+        get_image();
+        return false;
+    }
+    else if (image == ""){
+        get_image();
+        return false;
+    }
+    else if (image == null){
+        get_image();
+        return false;
+    }
+    return true;
 }
 
 function disable_annot(){
