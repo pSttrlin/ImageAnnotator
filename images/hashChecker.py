@@ -19,7 +19,7 @@ def hashfile(file):
         return hasher.hexdigest()
 
 dups = {}
-
+if not os.path.isdir("duplicates"): os.mkdir("duplicates")
 for file in glob.glob("*.jpeg"):
     file_hash = hashfile(file)
     if file_hash in dups:
